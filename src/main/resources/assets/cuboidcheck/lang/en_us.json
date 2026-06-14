@@ -1,0 +1,13 @@
+{
+  "itemGroup.cuboidcheck": "Example Mod Tab",
+  "block.cuboidcheck.example_block": "Example Block",
+  "item.cuboidcheck.example_item": "Example Item",
+
+  "cuboidcheck.configuration.title": "CuboidCheck Configs",
+  "cuboidcheck.configuration.section.cuboidcheck.common.toml": "CuboidCheck Configs",
+  "cuboidcheck.configuration.section.cuboidcheck.common.toml.title": "CuboidCheck Configs",
+  "cuboidcheck.configuration.items": "Item List",
+  "cuboidcheck.configuration.logDirtBlock": "Log Dirt Block",
+  "cuboidcheck.configuration.magicNumberIntroduction": "Magic Number Text",
+  "cuboidcheck.configuration.magicNumber": "Magic Number"
+}
