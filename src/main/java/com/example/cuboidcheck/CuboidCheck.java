@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import com.example.cuboidcheck.commands.CuboidCheckRestoreCommand;
 import com.example.cuboidcheck.config.CuboidCheckConfig;
 import com.example.cuboidcheck.network.BlockDataTcpClient;
+import com.example.cuboidcheck.network.BlockDataTcpServer;
 import com.mojang.logging.LogUtils;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -144,6 +145,17 @@ public class CuboidCheck {
     public void onServerStarting(ServerStartingEvent event) {
         // Do something when the server starts
         LOGGER.info("HELLO from server starting");
+        CuboidCheckConfig.ServerMode mode = CuboidCheckConfig.SERVER_MODE.get();
+        int port = CuboidCheckConfig.SERVER_B_PORT.get();
+        String targetIp = CuboidCheckConfig.SERVER_B_IP.get();
+
+        if (mode == CuboidCheckConfig.ServerMode.SERVER_B) {
+            // This instance is Server B: Start listening
+            BlockDataTcpServer.start(event.getServer(), port);
+        } else if (mode == CuboidCheckConfig.ServerMode.SERVER_A) {
+            // This instance is Server A: Connect to Server B
+            BlockDataTcpClient.connect(targetIp, port);
+        }
 
     }
 

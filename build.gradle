@@ -59,10 +59,37 @@ neoForge {
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
 
-        server {
-            server()
-            programArgument '--nogui'
-            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        // server {
+        //     server()
+        //     programArgument '--nogui'
+        //     systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        // }
+        // ─── SERVER A CONFIGURATION ───
+        serverA {
+            server() // Tells NeoForge this is a dedicated server type
+            gameDirectory = project.file('runs/serverA') // Forces a unique separate folder
+            ideName = "Run Server A (Requester)"
+
+            // Force Server A's game to host on a different port
+            programArguments = ['--port', '25565']
+
+            // Programmatically inject NeoForge configuration overrides via JVM arguments!
+            // This bypasses the need to manually touch .toml configs.
+            systemProperty 'neoforge.config.serverMode', 'SERVER_A'
+            systemProperty 'neoforge.config.serverBPort', '8082'
+        }
+
+        // ─── SERVER B CONFIGURATION ───
+        serverB {
+            server() 
+            gameDirectory = project.file('runs/serverB') // Forces a unique separate folder
+            ideName = "Run Server B (Listener)"
+            
+            // Force Server B's game to host on a different port
+            programArguments = ['--port', '25566']
+
+            systemProperty 'neoforge.config.serverMode', 'SERVER_B'
+            systemProperty 'neoforge.config.serverBPort', '8082'
         }
 
         // This run config launches GameTestServer and runs all registered gametests, then exits.
