@@ -3,6 +3,8 @@ package com.example.cuboidcheck;
 import org.slf4j.Logger;
 
 import com.example.cuboidcheck.commands.CuboidCheckRestoreCommand;
+import com.example.cuboidcheck.config.CuboidCheckConfig;
+import com.example.cuboidcheck.network.BlockDataTcpClient;
 import com.mojang.logging.LogUtils;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -28,6 +30,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
+import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -107,6 +110,13 @@ public class CuboidCheck {
         // Register our mod's ModConfigSpec so that FML can create and load the config
         // file for us
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+
+        modContainer.registerConfig(ModConfig.Type.SERVER, CuboidCheckConfig.SPEC);
+
+        // Register the server lifecycle events
+        NeoForge.EVENT_BUS.addListener(this::onServerStarting);
+        NeoForge.EVENT_BUS.addListener(this::onServerStopping);
+
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {
@@ -135,6 +145,14 @@ public class CuboidCheck {
         // Do something when the server starts
         LOGGER.info("HELLO from server starting");
 
+    }
+
+    @SubscribeEvent
+    private void onServerStopping(ServerStoppingEvent event) {
+        // Clean up socket connections if this was Server A
+        if (CuboidCheckConfig.SERVER_MODE.get() == CuboidCheckConfig.ServerMode.SERVER_A) {
+            BlockDataTcpClient.close();
+        }
     }
 
     @SubscribeEvent

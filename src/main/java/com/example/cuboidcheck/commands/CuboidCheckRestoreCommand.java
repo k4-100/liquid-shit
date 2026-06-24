@@ -1,13 +1,20 @@
-
 package com.example.cuboidcheck.commands;
 
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+import com.example.cuboidcheck.utl.BlockData;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
@@ -21,35 +28,68 @@ public class CuboidCheckRestoreCommand {
 
     dispatcher.register(
         Commands.literal("cuboidrestore")
-            .requires(source -> source.hasPermission(2)) // OP level 2
-            .executes(context -> {
-              MinecraftServer server = context.getSource().getServer();
-              ServerLevel level = server.getLevel(Level.OVERWORLD);
-              // BlockPos pos1 = new BlockPos(-50, 0, -50);
-              // BlockPos pos2 = new BlockPos(50, 200, 50);
-              BlockPos pos1 = new BlockPos(-5, 0, -5);
-              BlockPos pos2 = new BlockPos(5, 5, 5);
+            .then(Commands.argument("start", BlockPosArgument.blockPos())
+                .then(Commands.argument("end", BlockPosArgument.blockPos())
+                    .requires(source -> source.hasPermission(2)) // OP level 2
+                    .executes(context -> {
+                      MinecraftServer server = context.getSource().getServer();
+                      ServerLevel level = server.getLevel(Level.OVERWORLD);
+                      BlockPos posStart = BlockPosArgument.getBlockPos(context, "start");
+                      BlockPos posEnd = BlockPosArgument.getBlockPos(context, "end");
 
-              Map<BlockPos, BlockState> blockMap = new HashMap<>();
-              for (BlockPos pos : BlockPos.betweenClosed(pos1, pos2)) {
-                blockMap.put(pos.immutable(), level.getBlockState(pos));
+                      Map<BlockPos, BlockState> blockMap = new HashMap<>();
+                      for (BlockPos pos : BlockPos.betweenClosed(posStart, posEnd))
+                        blockMap.put(pos.immutable(), level.getBlockState(pos));
 
-              }
-              // String msg = "#####DATA######\n";
-              // for (BlockPos bp : blockMap.keySet()) {
-              // msg += bp.toString() + "\n";
-              // }
-              String msg = "#####DATA######\n"
-                  + blockMap.keySet().stream().map(k -> k.toString()).collect(Collectors.joining())
-                  + "\n#####DATA#####";
+                      final int blockCount = blockMap.size();
+                      // NOTE: check if it is withing boundaries
+                      // so you cannot do it for entire 10kx10k map it would crash
+                      // basically 0 0 0 x 50 50 50
+                      if (blockCount > 132651) {
+                        context.getSource().sendSuccess(
+                            () -> Component.literal("WARNING: TOO MANY BLOCKS: " + blockCount),
+                            false);
 
-              final String finalmsg = msg;
-              context.getSource().sendSuccess(
-                  () -> Component.literal(finalmsg),
-                  // () -> Component.literal("RESTORING"),
-                  false);
+                        return 1;
+                      }
+                      // List<BlockData> blocks = new ArrayList<>();
 
-              return 1;
-            }));
+                      context.getSource().sendSuccess(
+                          () -> Component.literal(
+                              "DATA: " + blockCount),
+                          false);
+
+                      context.getSource().sendSuccess(
+                          () -> Component.literal("Sending coordinates via TCP..."),
+                          false);
+
+                      // --- TCP SOCKET SENDING LOGIC ---
+                      // We use CompletableFuture to run this on a separate thread so the server
+                      // doesn't lag/freeze
+                      CompletableFuture.runAsync(() -> {
+                        try (Socket socket = new Socket("127.0.0.1", 12345);
+                            PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) {
+
+                          // Format: "startX,startY,startZ;endX,endY,endZ"
+                          String data = String.format("%d,%d,%d;%d,%d,%d",
+                              posStart.getX(), posStart.getY(), posStart.getZ(),
+                              posEnd.getX(), posEnd.getY(), posEnd.getZ());
+
+                          out.println(data);
+                          context.getSource().sendSuccess(
+                              () -> Component.literal(
+                                  "MANAGED TO SEND"),
+                              false);
+
+                        } catch (Exception e) {
+                          // Log the error if the socket connection fails
+                          server.execute(() -> context.getSource().sendFailure(
+                              Component.literal("Failed to send coords... data: " + e.getMessage())));
+                        }
+                      });
+                      // ---------------------------------
+
+                      return 1;
+                    }))));
   }
 }
