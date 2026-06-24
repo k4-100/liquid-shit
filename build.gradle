@@ -71,7 +71,7 @@ neoForge {
             ideName = "Run Server A (Requester)"
 
             // Force Server A's game to host on a different port
-            programArguments = ['--port', '25565']
+            programArguments = ['--port', '25565', '--nogui']
 
             // Programmatically inject NeoForge configuration overrides via JVM arguments!
             // This bypasses the need to manually touch .toml configs.
@@ -86,7 +86,7 @@ neoForge {
             ideName = "Run Server B (Listener)"
             
             // Force Server B's game to host on a different port
-            programArguments = ['--port', '25566']
+            programArguments = ['--port', '25566', '--nogui']
 
             systemProperty 'neoforge.config.serverMode', 'SERVER_B'
             systemProperty 'neoforge.config.serverBPort', '8082'
