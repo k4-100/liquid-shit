@@ -217,3 +217,9 @@ idea {
         downloadJavadoc = true
     }
 }
+
+tasks.withType(JavaExec) {
+    if (name == "runServerA" || name == "runServerB") {
+        standardInput = System.in
+    }
+}
