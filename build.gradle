@@ -76,7 +76,7 @@ neoForge {
             // Programmatically inject NeoForge configuration overrides via JVM arguments!
             // This bypasses the need to manually touch .toml configs.
             systemProperty 'neoforge.config.serverMode', 'SERVER_A'
-            systemProperty 'neoforge.config.serverBPort', '8082'
+            systemProperty 'neoforge.config.serverBPort', '8083'
         }
 
         // ─── SERVER B CONFIGURATION ───
@@ -89,7 +89,7 @@ neoForge {
             programArguments = ['--port', '25566', '--nogui']
 
             systemProperty 'neoforge.config.serverMode', 'SERVER_B'
-            systemProperty 'neoforge.config.serverBPort', '8082'
+            systemProperty 'neoforge.config.serverBPort', '8083'
         }
 
         // This run config launches GameTestServer and runs all registered gametests, then exits.

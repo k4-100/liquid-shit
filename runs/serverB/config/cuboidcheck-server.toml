@@ -7,8 +7,8 @@
 	#Allowed Values: SERVER_A, SERVER_B, STANDALONE
 	serverMode = "SERVER_B"
 	#The TCP port used for communication.
-	# Default: 8082
-	# Range: 1024 ~ 65535
-	serverBPort = 8082
+	# Default: 8083
+	# Range: 1024 ~ 65536
+	serverBPort = 8083
 	#The IP address of Server B (Only used if this is Server A).
 	serverBIp = "127.0.0.1"

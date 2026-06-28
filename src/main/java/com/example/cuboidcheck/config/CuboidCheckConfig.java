@@ -21,7 +21,9 @@ public class CuboidCheckConfig {
 
     SERVER_B_PORT = BUILDER
         .comment("The TCP port used for communication.")
-        .defineInRange("serverBPort", 8082, 1024, 65535);
+        // .defineInRange("serverBPort", 8082, 1024, 65535);
+        // .defineInRange("serverBPort", 8083, 1024, 65535);
+        .defineInRange("serverBPort", 8083, 1024, 65536);
 
     SERVER_B_IP = BUILDER
         .comment("The IP address of Server B (Only used if this is Server A).")

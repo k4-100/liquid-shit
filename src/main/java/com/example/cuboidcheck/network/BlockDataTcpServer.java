@@ -37,6 +37,8 @@ public class BlockDataTcpServer {
           Thread.ofVirtual().start(() -> handleClient(server, clientSocket));
         }
       } catch (Exception e) {
+
+        LOGGER.info("CUBOIDCHECK: SHIT CRASHED HERE" + port);
         e.printStackTrace();
       }
     }, "BlockData-TCP-Server");
