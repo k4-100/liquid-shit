@@ -3,6 +3,8 @@ package com.example.cuboidcheck.network;
 import com.example.cuboidcheck.utl.BlockData;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.mojang.logging.LogUtils;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -15,12 +17,18 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.CompletableFuture;
 
+import org.slf4j.Logger;
+
 public class BlockDataTcpServer {
+
+  public static final Logger LOGGER = LogUtils.getLogger();
 
   public static void start(MinecraftServer server, int port) {
     Thread serverThread = new Thread(() -> {
       try (ServerSocket serverSocket = new ServerSocket(port)) {
-        System.out.println("TCP BlockData Server listening on port " + port);
+        LOGGER.info("CUBOIDCHECK: TCP BlockData Server listening on port " + port);
+        // System.out.println("CUBOIDCHECK: TCP BlockData Server listening on port " +
+        // port);
 
         while (!server.isStopped()) {
           Socket clientSocket = serverSocket.accept();

@@ -149,12 +149,18 @@ public class CuboidCheck {
         int port = CuboidCheckConfig.SERVER_B_PORT.get();
         String targetIp = CuboidCheckConfig.SERVER_B_IP.get();
 
+        LOGGER.info("SERVER_TYPE: " + mode);
+
         if (mode == CuboidCheckConfig.ServerMode.SERVER_B) {
+            LOGGER.info("HELLO from server B starting");
             // This instance is Server B: Start listening
             BlockDataTcpServer.start(event.getServer(), port);
+            LOGGER.info("HELLO from server B started");
         } else if (mode == CuboidCheckConfig.ServerMode.SERVER_A) {
+            LOGGER.info("HELLO from server A starting");
             // This instance is Server A: Connect to Server B
             BlockDataTcpClient.connect(targetIp, port);
+            LOGGER.info("HELLO from server A started");
         }
 
     }

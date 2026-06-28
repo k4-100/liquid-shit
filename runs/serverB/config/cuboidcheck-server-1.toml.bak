@@ -6,7 +6,7 @@
 #STANDALONE: Does nothing (normal server)
 #Allowed Values: SERVER_A, SERVER_B, STANDALONE
 # serverMode = "STANDALONE"
-serverMode = "SERVER_A"
+serverMode = "SERVER_B"
 #The TCP port used for communication.
 # Default: 8082
 # Range: 1024 ~ 65535

@@ -3,6 +3,8 @@ package com.example.cuboidcheck.network;
 import com.example.cuboidcheck.utl.BlockData;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.mojang.logging.LogUtils;
+
 import net.minecraft.server.MinecraftServer;
 
 import java.io.DataInputStream;
@@ -12,12 +14,15 @@ import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.slf4j.Logger;
+
 public class BlockDataTcpClient {
 
   private static Socket socket;
   private static DataOutputStream out;
   private static DataInputStream in;
   private static final ExecutorService networkExecutor = Executors.newSingleThreadExecutor();
+  public static final Logger LOGGER = LogUtils.getLogger();
 
   public static void connect(String ip, int port) {
     networkExecutor.submit(() -> {
@@ -25,9 +30,10 @@ public class BlockDataTcpClient {
         socket = new Socket(ip, port);
         out = new DataOutputStream(socket.getOutputStream());
         in = new DataInputStream(socket.getInputStream());
-        System.out.println("Successfully connected to Server B via TCP!");
+        // System.out.println("Successfully connected to Server B via TCP!");
+        LOGGER.info("CUBOIDCHECK: Successfully connected to Server B via TCP!");
       } catch (Exception e) {
-        System.err.println("Failed to establish TCP connection to Server B.");
+        LOGGER.warn("CUBOIDCHECK: Failed to establish TCP connection to Server B.");
         e.printStackTrace();
       }
     });
@@ -35,7 +41,7 @@ public class BlockDataTcpClient {
 
   public static void requestBlockData(MinecraftServer server, int x, int y, int z) {
     if (socket == null || socket.isClosed() || out == null) {
-      System.err.println("Cannot request block data; TCP socket is disconnected.");
+      LOGGER.warn("CUBOIDCHECK:  Cannot request block data; TCP socket is disconnected.");
       return;
     }
 
@@ -70,7 +76,7 @@ public class BlockDataTcpClient {
 
   private static void processReceivedBlock(MinecraftServer server, BlockData data) {
     // Handle your logic on Server A here!
-    System.out.println("Processing fast TCP block at XYZ: " + data.x() + ", " + data.y() + ", " + data.z());
+    LOGGER.info("CUBOIDCHECK:  Processing fast TCP block at XYZ: " + data.x() + ", " + data.y() + ", " + data.z());
   }
 
   public static void close() {
