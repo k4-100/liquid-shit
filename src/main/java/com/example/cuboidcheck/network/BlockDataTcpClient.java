@@ -25,18 +25,21 @@ public class BlockDataTcpClient {
   public static final Logger LOGGER = LogUtils.getLogger();
 
   public static void connect(String ip, int port) {
-    networkExecutor.submit(() -> {
+    // networkExecutor.submit(() -> {
       try {
+        LOGGER.info("CUBOIDCHECK: loading SOCKET");
         socket = new Socket(ip, port);
+        LOGGER.info("CUBOIDCHECK: loading SOCKET IN");
         out = new DataOutputStream(socket.getOutputStream());
         in = new DataInputStream(socket.getInputStream());
         // System.out.println("Successfully connected to Server B via TCP!");
         LOGGER.info("CUBOIDCHECK: Successfully connected to Server B via TCP!");
       } catch (Exception e) {
         LOGGER.warn("CUBOIDCHECK: Failed to establish TCP connection to Server B.");
+        LOGGER.warn("CUBOIDCHECK: " + ip + ":" + port );
         e.printStackTrace();
       }
-    });
+    // });
   }
 
   public static void requestBlockData(MinecraftServer server, int x, int y, int z) {
