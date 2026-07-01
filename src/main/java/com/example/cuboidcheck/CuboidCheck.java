@@ -40,142 +40,142 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
 @Mod(CuboidCheck.MODID)
 public class CuboidCheck {
-    // Define mod id in a common place for everything to reference
-    public static final String MODID = "cuboidcheck";
-    // Directly reference a slf4j logger
-    public static final Logger LOGGER = LogUtils.getLogger();
-    // Create a Deferred Register to hold Blocks which will all be registered under
-    // the "cuboidcheck" namespace
-    public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
-    // Create a Deferred Register to hold Items which will all be registered under
-    // the "cuboidcheck" namespace
-    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
-    // Create a Deferred Register to hold CreativeModeTabs which will all be
-    // registered under the "cuboidcheck" namespace
-    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister
-            .create(Registries.CREATIVE_MODE_TAB, MODID);
+  // Define mod id in a common place for everything to reference
+  public static final String MODID = "cuboidcheck";
+  // Directly reference a slf4j logger
+  public static final Logger LOGGER = LogUtils.getLogger();
+  // Create a Deferred Register to hold Blocks which will all be registered under
+  // the "cuboidcheck" namespace
+  public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
+  // Create a Deferred Register to hold Items which will all be registered under
+  // the "cuboidcheck" namespace
+  public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
+  // Create a Deferred Register to hold CreativeModeTabs which will all be
+  // registered under the "cuboidcheck" namespace
+  public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister
+      .create(Registries.CREATIVE_MODE_TAB, MODID);
 
-    // Creates a new Block with the id "cuboidcheck:example_block", combining the
-    // namespace and path
-    public static final DeferredBlock<Block> EXAMPLE_BLOCK = BLOCKS.registerSimpleBlock("example_block",
-            BlockBehaviour.Properties.of().mapColor(MapColor.STONE));
-    // Creates a new BlockItem with the id "cuboidcheck:example_block", combining
-    // the namespace and path
-    public static final DeferredItem<BlockItem> EXAMPLE_BLOCK_ITEM = ITEMS.registerSimpleBlockItem("example_block",
-            EXAMPLE_BLOCK);
+  // Creates a new Block with the id "cuboidcheck:example_block", combining the
+  // namespace and path
+  public static final DeferredBlock<Block> EXAMPLE_BLOCK = BLOCKS.registerSimpleBlock("example_block",
+      BlockBehaviour.Properties.of().mapColor(MapColor.STONE));
+  // Creates a new BlockItem with the id "cuboidcheck:example_block", combining
+  // the namespace and path
+  public static final DeferredItem<BlockItem> EXAMPLE_BLOCK_ITEM = ITEMS.registerSimpleBlockItem("example_block",
+      EXAMPLE_BLOCK);
 
-    // Creates a new food item with the id "cuboidcheck:example_id", nutrition 1 and
-    // saturation 2
-    public static final DeferredItem<Item> EXAMPLE_ITEM = ITEMS.registerSimpleItem("example_item",
-            new Item.Properties().food(new FoodProperties.Builder()
-                    .alwaysEdible().nutrition(1).saturationModifier(2f).build()));
+  // Creates a new food item with the id "cuboidcheck:example_id", nutrition 1 and
+  // saturation 2
+  public static final DeferredItem<Item> EXAMPLE_ITEM = ITEMS.registerSimpleItem("example_item",
+      new Item.Properties().food(new FoodProperties.Builder()
+          .alwaysEdible().nutrition(1).saturationModifier(2f).build()));
 
-    // Creates a creative tab with the id "cuboidcheck:example_tab" for the example
-    // item, that is placed after the combat tab
-    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS
-            .register("example_tab", () -> CreativeModeTab.builder()
-                    .title(Component.translatable("itemGroup.cuboidcheck")) // The language key for the title of your
-                                                                            // CreativeModeTab
-                    .withTabsBefore(CreativeModeTabs.COMBAT)
-                    .icon(() -> EXAMPLE_ITEM.get().getDefaultInstance())
-                    .displayItems((parameters, output) -> {
-                        output.accept(EXAMPLE_ITEM.get()); // Add the example item to the tab. For your own tabs, this
-                                                           // method is preferred over the event
-                    }).build());
+  // Creates a creative tab with the id "cuboidcheck:example_tab" for the example
+  // item, that is placed after the combat tab
+  public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS
+      .register("example_tab", () -> CreativeModeTab.builder()
+          .title(Component.translatable("itemGroup.cuboidcheck")) // The language key for the title of your
+                                                                  // CreativeModeTab
+          .withTabsBefore(CreativeModeTabs.COMBAT)
+          .icon(() -> EXAMPLE_ITEM.get().getDefaultInstance())
+          .displayItems((parameters, output) -> {
+            output.accept(EXAMPLE_ITEM.get()); // Add the example item to the tab. For your own tabs, this
+                                               // method is preferred over the event
+          }).build());
 
-    // The constructor for the mod class is the first code that is run when your mod
-    // is loaded.
-    // FML will recognize some parameter types like IEventBus or ModContainer and
-    // pass them in automatically.
-    public CuboidCheck(IEventBus modEventBus, ModContainer modContainer) {
-        // Register the commonSetup method for modloading
-        modEventBus.addListener(this::commonSetup);
+  // The constructor for the mod class is the first code that is run when your mod
+  // is loaded.
+  // FML will recognize some parameter types like IEventBus or ModContainer and
+  // pass them in automatically.
+  public CuboidCheck(IEventBus modEventBus, ModContainer modContainer) {
+    // Register the commonSetup method for modloading
+    modEventBus.addListener(this::commonSetup);
 
-        // Register the Deferred Register to the mod event bus so blocks get registered
-        BLOCKS.register(modEventBus);
-        // Register the Deferred Register to the mod event bus so items get registered
-        ITEMS.register(modEventBus);
-        // Register the Deferred Register to the mod event bus so tabs get registered
-        CREATIVE_MODE_TABS.register(modEventBus);
+    // Register the Deferred Register to the mod event bus so blocks get registered
+    BLOCKS.register(modEventBus);
+    // Register the Deferred Register to the mod event bus so items get registered
+    ITEMS.register(modEventBus);
+    // Register the Deferred Register to the mod event bus so tabs get registered
+    CREATIVE_MODE_TABS.register(modEventBus);
 
-        // Register ourselves for server and other game events we are interested in.
-        // Note that this is necessary if and only if we want *this* class (CuboidCheck)
-        // to respond directly to events.
-        // Do not add this line if there are no @SubscribeEvent-annotated functions in
-        // this class, like onServerStarting() below.
-        NeoForge.EVENT_BUS.register(this);
+    // Register ourselves for server and other game events we are interested in.
+    // Note that this is necessary if and only if we want *this* class (CuboidCheck)
+    // to respond directly to events.
+    // Do not add this line if there are no @SubscribeEvent-annotated functions in
+    // this class, like onServerStarting() below.
+    NeoForge.EVENT_BUS.register(this);
 
-        // Register the item to a creative tab
-        modEventBus.addListener(this::addCreative);
+    // Register the item to a creative tab
+    modEventBus.addListener(this::addCreative);
 
-        // Register our mod's ModConfigSpec so that FML can create and load the config
-        // file for us
-        modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+    // Register our mod's ModConfigSpec so that FML can create and load the config
+    // file for us
+    modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
 
-        modContainer.registerConfig(ModConfig.Type.SERVER, CuboidCheckConfig.SPEC);
+    modContainer.registerConfig(ModConfig.Type.SERVER, CuboidCheckConfig.SPEC);
 
-        // Register the server lifecycle events
-        NeoForge.EVENT_BUS.addListener(this::onServerStarting);
-        NeoForge.EVENT_BUS.addListener(this::onServerStopping);
+    // Register the server lifecycle events
+    NeoForge.EVENT_BUS.addListener(this::onServerStarting);
+    NeoForge.EVENT_BUS.addListener(this::onServerStopping);
 
+  }
+
+  private void commonSetup(FMLCommonSetupEvent event) {
+    // Some common setup code
+    LOGGER.info("HELLO FROM COMMON SETUP");
+
+    if (Config.LOG_DIRT_BLOCK.getAsBoolean()) {
+      LOGGER.info("DIRT BLOCK >> {}", BuiltInRegistries.BLOCK.getKey(Blocks.DIRT));
     }
 
-    private void commonSetup(FMLCommonSetupEvent event) {
-        // Some common setup code
-        LOGGER.info("HELLO FROM COMMON SETUP");
+    LOGGER.info("{}{}", Config.MAGIC_NUMBER_INTRODUCTION.get(), Config.MAGIC_NUMBER.getAsInt());
 
-        if (Config.LOG_DIRT_BLOCK.getAsBoolean()) {
-            LOGGER.info("DIRT BLOCK >> {}", BuiltInRegistries.BLOCK.getKey(Blocks.DIRT));
-        }
+    Config.ITEM_STRINGS.get().forEach((item) -> LOGGER.info("ITEM >> {}", item));
+  }
 
-        LOGGER.info("{}{}", Config.MAGIC_NUMBER_INTRODUCTION.get(), Config.MAGIC_NUMBER.getAsInt());
+  // Add the example block item to the building blocks tab
+  private void addCreative(BuildCreativeModeTabContentsEvent event) {
+    if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
+      event.accept(EXAMPLE_BLOCK_ITEM);
+    }
+  }
 
-        Config.ITEM_STRINGS.get().forEach((item) -> LOGGER.info("ITEM >> {}", item));
+  // You can use SubscribeEvent and let the Event Bus discover methods to call
+  @SubscribeEvent
+  public void onServerStarting(ServerStartingEvent event) {
+    // Do something when the server starts
+    LOGGER.info("HELLO from server starting");
+    CuboidCheckConfig.ServerMode mode = CuboidCheckConfig.SERVER_MODE.get();
+    int port = CuboidCheckConfig.SERVER_B_PORT.get();
+    String targetIp = CuboidCheckConfig.SERVER_B_IP.get();
+
+    LOGGER.info("SERVER_TYPE: " + mode);
+
+    if (mode == CuboidCheckConfig.ServerMode.SERVER_B) {
+      LOGGER.info("HELLO from server B starting, port: " + port);
+      // This instance is Server B: Start listening
+      BlockDataTcpServer.start(event.getServer(), port);
+      LOGGER.info("HELLO from server B started, port: " + port);
+    } else if (mode == CuboidCheckConfig.ServerMode.SERVER_A) {
+      LOGGER.info("HELLO from server A starting");
+      // This instance is Server A: Connect to Server B
+      BlockDataTcpClient.connect(targetIp, port);
+      LOGGER.info("HELLO from server A started");
     }
 
-    // Add the example block item to the building blocks tab
-    private void addCreative(BuildCreativeModeTabContentsEvent event) {
-        if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
-            event.accept(EXAMPLE_BLOCK_ITEM);
-        }
+  }
+
+  @SubscribeEvent
+  private void onServerStopping(ServerStoppingEvent event) {
+    // Clean up socket connections if this was Server A
+    if (CuboidCheckConfig.SERVER_MODE.get() == CuboidCheckConfig.ServerMode.SERVER_A) {
+      BlockDataTcpClient.close();
     }
+  }
 
-    // You can use SubscribeEvent and let the Event Bus discover methods to call
-    @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event) {
-        // Do something when the server starts
-        LOGGER.info("HELLO from server starting");
-        CuboidCheckConfig.ServerMode mode = CuboidCheckConfig.SERVER_MODE.get();
-        int port = CuboidCheckConfig.SERVER_B_PORT.get();
-        String targetIp = CuboidCheckConfig.SERVER_B_IP.get();
-
-        LOGGER.info("SERVER_TYPE: " + mode);
-
-        if (mode == CuboidCheckConfig.ServerMode.SERVER_B) {
-            LOGGER.info("HELLO from server B starting");
-            // This instance is Server B: Start listening
-            BlockDataTcpServer.start(event.getServer(), port);
-            LOGGER.info("HELLO from server B started");
-        } else if (mode == CuboidCheckConfig.ServerMode.SERVER_A) {
-            LOGGER.info("HELLO from server A starting");
-            // This instance is Server A: Connect to Server B
-            BlockDataTcpClient.connect(targetIp, port);
-            LOGGER.info("HELLO from server A started");
-        }
-
-    }
-
-    @SubscribeEvent
-    private void onServerStopping(ServerStoppingEvent event) {
-        // Clean up socket connections if this was Server A
-        if (CuboidCheckConfig.SERVER_MODE.get() == CuboidCheckConfig.ServerMode.SERVER_A) {
-            BlockDataTcpClient.close();
-        }
-    }
-
-    @SubscribeEvent
-    public void onCommandsRegister(RegisterCommandsEvent event) {
-        CuboidCheckRestoreCommand.register(event.getDispatcher());
-    }
+  @SubscribeEvent
+  public void onCommandsRegister(RegisterCommandsEvent event) {
+    CuboidCheckRestoreCommand.register(event.getDispatcher());
+  }
 
 }

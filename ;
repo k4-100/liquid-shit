@@ -24,31 +24,33 @@ public class BlockDataTcpServer {
   public static final Logger LOGGER = LogUtils.getLogger();
 
   public static void start(MinecraftServer server, int port) {
-    // Thread serverThread = new Thread(() -> {
-    try (ServerSocket serverSocket = new ServerSocket(port)) {
-      // try (Socket clientSocket = new Socket()) {
+    Thread serverThread = new Thread(() -> {
+      try (ServerSocket serverSocket = new ServerSocket(port)) {
+        // try (Socket clientSocket = new Socket()) {
 
-      LOGGER.info("CUBOIDCHECK: TCP BlockData Server listening on port " + port);
-      // System.out.println("CUBOIDCHECK: TCP BlockData Server listening on port " +
-      // port);
-      LOGGER.info("CUBOIDCHECK: CONNECTED SERVER B" + port);
-      while (!server.isStopped()) {
-        Socket clientSocket = serverSocket.accept();
+        LOGGER.info("CUBOIDCHECK: TCP BlockData Server listening on port " + port);
+        // System.out.println("CUBOIDCHECK: TCP BlockData Server listening on port " +
+        // port);
+        // Socket clientSocket = serverSocket.accept();
+        LOGGER.info("CUBOIDCHECK: CONNECTED SERVER B" + port);
+        while (!server.isStopped()) {
+          // clientSocket = serverSocket.accept();
 
-        // Handle each connection in a lightweight thread task to keep the listener open
-        // Thread.ofVirtual().start(() -> handleClient(server, clientSocket));
-        // Thread.ofVirtual().start(() -> handleClient(server, clientSocket));
-        clientSocket.close();
+          // Handle each connection in a lightweight thread task to keep the listener open
+          // Thread.ofVirtual().start(() -> handleClient(server, clientSocket));
+          // Thread.ofVirtual().start(() -> handleClient(server, clientSocket));
+        }
+
+        // clientSocket.close();
+
+      } catch (Exception e) {
+
+        LOGGER.info("CUBOIDCHECK: SHIT CRASHED HERE" + port);
+        e.printStackTrace();
       }
+    }, "BlockData-TCP-Server");
 
-    } catch (Exception e) {
-
-      LOGGER.info("CUBOIDCHECK: SHIT CRASHED HERE" + port);
-      e.printStackTrace();
-    }
-    // }, "BlockData-TCP-Server");
-
-    // serverThread.setDaemon(true);
+    serverThread.setDaemon(true);
     // serverThread.start();
   }
 
