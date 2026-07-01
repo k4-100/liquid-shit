@@ -37,7 +37,7 @@ public class BlockDataTcpServer {
 
         // Handle each connection in a lightweight thread task to keep the listener open
         // Thread.ofVirtual().start(() -> handleClient(server, clientSocket));
-        // Thread.ofVirtual().start(() -> handleClient(server, clientSocket));
+        Thread.ofVirtual().start(() -> handleClient(server, clientSocket));
         clientSocket.close();
       }
 
