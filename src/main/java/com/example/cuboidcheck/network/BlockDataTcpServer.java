@@ -1,99 +1,132 @@
 package com.example.cuboidcheck.network;
 
 import com.example.cuboidcheck.utl.BlockData;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.mojang.logging.LogUtils;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.slf4j.Logger;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
-
-import org.slf4j.Logger;
 
 public class BlockDataTcpServer {
 
-  public static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
+    private static boolean isServerRunning = false;
 
-  public static void start(MinecraftServer server, int port) {
-    // Thread serverThread = new Thread(() -> {
-    try (ServerSocket serverSocket = new ServerSocket(port)) {
-      // try (Socket clientSocket = new Socket()) {
+    public static synchronized void start(MinecraftServer server, int port) {
+        // If the server is already active or spinning up, bail out immediately!
+        if (isServerRunning) {
+            LOGGER.warn("CUBOIDCHECK: Server start requested, but TCP Server is already running on port " + port);
+            return;
+        }
 
-      LOGGER.info("CUBOIDCHECK: TCP BlockData Server listening on port " + port);
-      // System.out.println("CUBOIDCHECK: TCP BlockData Server listening on port " +
-      // port);
-      LOGGER.info("CUBOIDCHECK: CONNECTED SERVER B" + port);
-      while (!server.isStopped()) {
-        Socket clientSocket = serverSocket.accept();
+        isServerRunning = true;
 
-        // Handle each connection in a lightweight thread task to keep the listener open
-        // Thread.ofVirtual().start(() -> handleClient(server, clientSocket));
-        Thread.ofVirtual().start(() -> handleClient(server, clientSocket));
-        clientSocket.close();
-      }
+        Thread serverThread = new Thread(() -> {
+            try (ServerSocket serverSocket = new ServerSocket(port)) {
+                LOGGER.info("CUBOIDCHECK: TCP BlockData Server listening on port " + port);
 
-    } catch (Exception e) {
+                while (!server.isStopped()) {
+                    Socket clientSocket = serverSocket.accept();
+                    Thread.ofVirtual().start(() -> handleClient(server, clientSocket));
+                }
+            } catch (Exception e) {
+                LOGGER.error("CUBOIDCHECK: Server socket crashed on port " + port);
+                e.printStackTrace();
+            } finally {
+                // If it crashes or stops, reset the flag so it can be restarted later if needed
+                synchronized (BlockDataTcpServer.class) {
+                    isServerRunning = false;
+                }
+            }
+        }, "BlockData-TCP-Server");
 
-      LOGGER.info("CUBOIDCHECK: SHIT CRASHED HERE" + port);
-      e.printStackTrace();
+        serverThread.setDaemon(true);
+        serverThread.start();
     }
-    // }, "BlockData-TCP-Server");
 
-    // serverThread.setDaemon(true);
-    // serverThread.start();
-  }
+    private static void handleClient(MinecraftServer server, Socket socket) {
+        try (socket; // Auto-closes socket when finishing execution block
+                DataInputStream in = new DataInputStream(socket.getInputStream());
+                DataOutputStream out = new DataOutputStream(socket.getOutputStream())) {
 
-  private static void handleClient(MinecraftServer server, Socket socket) {
-    try (DataInputStream in = new DataInputStream(socket.getInputStream());
-        DataOutputStream out = new DataOutputStream(socket.getOutputStream())) {
+            while (socket.isConnected() && !socket.isClosed()) {
+                // 1. Read cuboid boundary parameters from Client
+                int x1 = in.readInt();
+                int y1 = in.readInt();
+                int z1 = in.readInt();
+                int x2 = in.readInt();
+                int y2 = in.readInt();
+                int z2 = in.readInt();
 
-      while (socket.isConnected() && !socket.isClosed()) {
-        // 1. Read request coordinates from Server A
-        int targetX = in.readInt();
-        int targetY = in.readInt();
-        int targetZ = in.readInt();
+                // Establish correct normalized boundaries (min coordinates up to max
+                // coordinates)
+                int minX = Math.min(x1, x2);
+                int minY = Math.min(y1, y2);
+                int minZ = Math.min(z1, z2);
+                int maxX = Math.max(x1, x2);
+                int maxY = Math.max(y1, y2);
+                int maxZ = Math.max(z1, z2);
 
-        // 2. Fetch the block safely on Minecraft's main thread
-        CompletableFuture<BlockData> futureData = CompletableFuture.supplyAsync(() -> {
-          ServerLevel level = server.overworld();
-          BlockPos pos = new BlockPos(targetX, targetY, targetZ);
+                // 2. Fetch the whole cuboid volume payload safely on Minecraft's main thread
+                CompletableFuture<List<BlockData>> futureData = CompletableFuture.supplyAsync(() -> {
+                    ServerLevel level = server.overworld();
+                    List<BlockData> cuboidBlocks = new ArrayList<>();
 
-          BlockState state = level.getBlockState(pos);
-          BlockEntity blockEntity = level.getBlockEntity(pos);
+                    for (int x = minX; x <= maxX; x++) {
+                        for (int y = minY; y <= maxY; y++) {
+                            for (int z = minZ; z <= maxZ; z++) {
+                                BlockPos pos = new BlockPos(x, y, z);
+                                BlockState state = level.getBlockState(pos);
+                                BlockEntity blockEntity = level.getBlockEntity(pos);
 
-          // Use a primitive string representation or codec JSON for blockstate
-          com.google.gson.JsonElement stateJson = new com.google.gson.JsonPrimitive(state.toString());
-          net.minecraft.nbt.CompoundTag nbt = blockEntity != null
-              ? blockEntity.saveWithFullMetadata(level.registryAccess())
-              : null;
+                                com.google.gson.JsonElement stateJson = new com.google.gson.JsonPrimitive(
+                                        state.toString());
+                                net.minecraft.nbt.CompoundTag nbt = blockEntity != null
+                                        ? blockEntity.saveWithFullMetadata(level.registryAccess())
+                                        : null;
 
-          return new BlockData(targetX, targetY, targetZ, stateJson, nbt);
-        }, server);
+                                cuboidBlocks.add(new BlockData(x, y, z, stateJson, nbt));
+                            }
+                        }
+                    }
+                    return cuboidBlocks;
+                }, server);
 
-        // 3. Wait for the main thread, serialize, and push back down the socket
-        // pipeline
-        BlockData blockData = futureData.join();
-        String jsonResponse = blockData.toJson().toString();
-        byte[] responseBytes = jsonResponse.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+                // 3. Serialize packed dataset and send it back down the pipeline
+                List<BlockData> blockDataList = futureData.join();
 
-        // Send length prefix, then the actual payload data
-        out.writeInt(responseBytes.length);
-        out.write(responseBytes);
-        out.flush();
-      }
-    } catch (java.io.EOFException ignored) {
-      // Client disconnected naturally, safely close connection
-    } catch (Exception e) {
-      e.printStackTrace();
+                JsonObject responseJson = new JsonObject();
+                JsonArray blocksArray = new JsonArray();
+                for (BlockData bd : blockDataList) {
+                    blocksArray.add(bd.toJson());
+                }
+                responseJson.add("blocks", blocksArray);
+
+                String jsonResponse = responseJson.toString();
+                byte[] responseBytes = jsonResponse.getBytes(StandardCharsets.UTF_8);
+
+                // Write length prefix followed by complete JSON structural data
+                out.writeInt(responseBytes.length);
+                out.write(responseBytes);
+                out.flush();
+            }
+        } catch (java.io.EOFException ignored) {
+            // Client cleanly closed its side of the stream connection pipeline
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-  }
 }
