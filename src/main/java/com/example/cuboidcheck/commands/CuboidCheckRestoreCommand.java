@@ -72,7 +72,7 @@ public class CuboidCheckRestoreCommand {
                       // We use CompletableFuture to run this on a separate thread so the server
                       // doesn't lag/freeze
                       CompletableFuture.runAsync(() -> {
-                        try (Socket socket = new Socket("127.0.0.1", 12345);
+                        try (Socket socket = new Socket("127.0.0.1", 8082);
                         // PrintWriter out = new PrintWriter(socket.getOutputStream(), true)
                         ) {
 
@@ -92,6 +92,7 @@ public class CuboidCheckRestoreCommand {
                           // false);
 
                         } catch (Exception e) {
+                          e.printStackTrace();
                           // Log the error if the socket connection fails
                           server.execute(() -> context.getSource().sendFailure(
                               Component.literal("Failed to send coords... data: " + e.getMessage())));
