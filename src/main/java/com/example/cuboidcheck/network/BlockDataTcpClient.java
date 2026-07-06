@@ -1,20 +1,22 @@
 package com.example.cuboidcheck.network;
 
 import com.example.cuboidcheck.utl.BlockData;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.logging.LogUtils;
-
 import net.minecraft.server.MinecraftServer;
+import org.slf4j.Logger;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import org.slf4j.Logger;
 
 public class BlockDataTcpClient {
 
@@ -25,61 +27,72 @@ public class BlockDataTcpClient {
   public static final Logger LOGGER = LogUtils.getLogger();
 
   public static void connect(String ip, int port) {
-    // networkExecutor.submit(() -> {
-      try {
-        LOGGER.info("CUBOIDCHECK: loading SOCKET");
-        socket = new Socket(ip, port);
-        LOGGER.info("CUBOIDCHECK: loading SOCKET IN");
-        out = new DataOutputStream(socket.getOutputStream());
-        in = new DataInputStream(socket.getInputStream());
-        // System.out.println("Successfully connected to Server B via TCP!");
-        LOGGER.info("CUBOIDCHECK: Successfully connected to Server B via TCP!");
-      } catch (Exception e) {
-        LOGGER.warn("CUBOIDCHECK: Failed to establish TCP connection to Server B.");
-        LOGGER.warn("CUBOIDCHECK: " + ip + ":" + port );
-        e.printStackTrace();
-      }
-    // });
+    try {
+      LOGGER.info("CUBOIDCHECK: loading SOCKET");
+      socket = new Socket(ip, port);
+      out = new DataOutputStream(socket.getOutputStream());
+      in = new DataInputStream(socket.getInputStream());
+      LOGGER.info("CUBOIDCHECK: Successfully connected to Server B via TCP!");
+    } catch (Exception e) {
+      LOGGER.warn("CUBOIDCHECK: Failed to establish TCP connection to Server B at {}:{}", ip, port);
+      e.printStackTrace();
+    }
   }
 
-  public static void requestBlockData(MinecraftServer server, int x, int y, int z) {
+  /**
+   * Requests data for all blocks within the specified cuboid boundaries.
+   */
+  public static void requestCuboidData(MinecraftServer server, int x1, int y1, int z1, int x2, int y2, int z2) {
     if (socket == null || socket.isClosed() || out == null) {
-      LOGGER.warn("CUBOIDCHECK:  Cannot request block data; TCP socket is disconnected.");
+      LOGGER.warn("CUBOIDCHECK: Cannot request cuboid data; TCP socket is disconnected.");
       return;
     }
 
     networkExecutor.submit(() -> {
       try {
-        // 1. Write request payload
-        out.writeInt(x);
-        out.writeInt(y);
-        out.writeInt(z);
+        // 1. Write the bounding box coordinates to the stream
+        out.writeInt(x1);
+        out.writeInt(y1);
+        out.writeInt(z1);
+        out.writeInt(x2);
+        out.writeInt(y2);
+        out.writeInt(z2);
         out.flush();
 
-        // 2. Read length prefix of the response payload
+        // 2. Read the response payload length prefix
         int length = in.readInt();
         if (length > 0) {
           byte[] messageBytes = new byte[length];
           in.readFully(messageBytes);
 
           String jsonStr = new String(messageBytes, StandardCharsets.UTF_8);
-          JsonObject json = JsonParser.parseString(jsonStr).getAsJsonObject();
-          BlockData receivedData = BlockData.fromJson(json);
+          JsonObject responseJson = JsonParser.parseString(jsonStr).getAsJsonObject();
 
-          // 3. Synchronize data execution safely on Server A's main world thread
+          JsonArray blocksArray = responseJson.getAsJsonArray("blocks");
+          List<BlockData> receivedBlocks = new ArrayList<>();
+
+          for (JsonElement element : blocksArray) {
+            receivedBlocks.add(BlockData.fromJson(element.getAsJsonObject()));
+          }
+
+          // 3. Synchronize data execution back onto the Minecraft main thread safely
           server.execute(() -> {
-            processReceivedBlock(server, receivedData);
+            processReceivedCuboid(server, receivedBlocks);
           });
         }
       } catch (Exception e) {
+        LOGGER.error("CUBOIDCHECK: Error during cuboid data request process.");
         e.printStackTrace();
       }
     });
   }
 
-  private static void processReceivedBlock(MinecraftServer server, BlockData data) {
-    // Handle your logic on Server A here!
-    LOGGER.info("CUBOIDCHECK:  Processing fast TCP block at XYZ: " + data.x() + ", " + data.y() + ", " + data.z());
+  private static void processReceivedCuboid(MinecraftServer server, List<BlockData> blocks) {
+    LOGGER.info("CUBOIDCHECK: Processing batch cuboid containing {} blocks.", blocks.size());
+    for (BlockData data : blocks) {
+      // Your custom logic per block goes here
+      // e.g., level.setBlock(...) or tracking layout differentials
+    }
   }
 
   public static void close() {

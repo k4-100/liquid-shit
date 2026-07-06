@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+import com.example.cuboidcheck.network.BlockDataTcpClient;
 import com.example.cuboidcheck.utl.BlockData;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
@@ -63,23 +64,32 @@ public class CuboidCheckRestoreCommand {
                           () -> Component.literal("Sending coordinates via TCP..."),
                           false);
 
+                      // CompletableFuture.runAsync(() -> {
+                      //
+                      // });
+
                       // --- TCP SOCKET SENDING LOGIC ---
                       // We use CompletableFuture to run this on a separate thread so the server
                       // doesn't lag/freeze
                       CompletableFuture.runAsync(() -> {
                         try (Socket socket = new Socket("127.0.0.1", 12345);
-                            PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) {
+                        // PrintWriter out = new PrintWriter(socket.getOutputStream(), true)
+                        ) {
 
-                          // Format: "startX,startY,startZ;endX,endY,endZ"
-                          String data = String.format("%d,%d,%d;%d,%d,%d",
+                          BlockDataTcpClient.requestCuboidData(server,
                               posStart.getX(), posStart.getY(), posStart.getZ(),
                               posEnd.getX(), posEnd.getY(), posEnd.getZ());
 
-                          out.println(data);
-                          context.getSource().sendSuccess(
-                              () -> Component.literal(
-                                  "MANAGED TO SEND"),
-                              false);
+                          // Format: "startX,startY,startZ;endX,endY,endZ"
+                          // String data = String.format("%d,%d,%d;%d,%d,%d",
+                          // posStart.getX(), posStart.getY(), posStart.getZ(),
+                          // posEnd.getX(), posEnd.getY(), posEnd.getZ());
+                          //
+                          // out.println(data);
+                          // context.getSource().sendSuccess(
+                          // () -> Component.literal(
+                          // "MANAGED TO SEND"),
+                          // false);
 
                         } catch (Exception e) {
                           // Log the error if the socket connection fails
