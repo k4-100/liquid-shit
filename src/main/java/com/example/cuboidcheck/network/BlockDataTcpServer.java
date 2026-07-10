@@ -92,8 +92,13 @@ public class BlockDataTcpServer {
                 BlockState state = level.getBlockState(pos);
                 BlockEntity blockEntity = level.getBlockEntity(pos);
 
-                com.google.gson.JsonElement stateJson = new com.google.gson.JsonPrimitive(
-                    state.toString());
+                // com.google.gson.JsonElement stateJson = new com.google.gson.JsonPrimitive(
+                // state.toString());
+
+                // Replace it with this:
+                String stateString = net.minecraft.commands.arguments.blocks.BlockStateParser.serialize(state);
+                com.google.gson.JsonElement stateJson = new com.google.gson.JsonPrimitive(stateString);
+
                 net.minecraft.nbt.CompoundTag nbt = blockEntity != null
                     ? blockEntity.saveWithFullMetadata(level.registryAccess())
                     : null;

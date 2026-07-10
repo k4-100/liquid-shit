@@ -144,34 +144,33 @@ public class BlockDataTcpClient {
       BlockPos pos = new BlockPos(data.x(), data.y(), data.z());
 
       try {
-        // 1. Convert the JSON string back into a valid Minecraft BlockState
+        // 1. Get the raw serialized state string from JSON
         String stateString = data.blockState().getAsString();
 
-        // This parses vanilla state strings like "minecraft:chest[facing=north]" safely
+        // 2. Parse it back into a valid BlockState using Server A's registry lookup
+        // context
         BlockStateParser.BlockResult parsedResult = BlockStateParser.parseForBlock(
             level.holderLookup(BuiltInRegistries.BLOCK.key()),
             stateString,
             false);
         BlockState targetState = parsedResult.blockState();
 
-        // 2. Set the block state in Server A's world
-        // Flags: 2 = Send to clients, 16 = Prevent neighbor reactions if you want it
-        // exact
+        // 3. Set the block state down into Server A's world map layout
         level.setBlock(pos, targetState, 2);
 
-        // 3. If the block has NBT data (like a Chest, Furnace, or Sign), paste it in
+        // 4. Update Block Entities safely (Inventories, signs, chests, containers)
         CompoundTag nbt = data.blockEntityTag();
         if (nbt != null) {
           BlockEntity blockEntity = level.getBlockEntity(pos);
           if (blockEntity != null) {
-            // Update the block entity's internal coordinates to match the new position
+            // Update target structural vector coordinates inside NBT block mapping
             nbt.putInt("x", pos.getX());
             nbt.putInt("y", pos.getY());
             nbt.putInt("z", pos.getZ());
 
-            // Load the metadata payload directly into the tile entity
+            // For modern engine environments, load standard block data configurations
             blockEntity.loadWithComponents(nbt, level.registryAccess());
-            blockEntity.setChanged(); // Mark chunk dirty so it saves to disk
+            blockEntity.setChanged();
           }
         }
 
@@ -181,6 +180,57 @@ public class BlockDataTcpClient {
       }
     }
   }
+
+  // private static void processReceivedCuboid(MinecraftServer server,
+  // List<BlockData> blocks) {
+  // LOGGER.info("CUBOIDCHECK: Pasting batch cuboid containing {} blocks into
+  // Server A.", blocks.size());
+  //
+  // ServerLevel level = server.overworld();
+  //
+  // for (BlockData data : blocks) {
+  // BlockPos pos = new BlockPos(data.x(), data.y(), data.z());
+  //
+  // try {
+  // // 1. Convert the JSON string back into a valid Minecraft BlockState
+  // String stateString = data.blockState().getAsString();
+  //
+  // // This parses vanilla state strings like "minecraft:chest[facing=north]"
+  // safely
+  // BlockStateParser.BlockResult parsedResult = BlockStateParser.parseForBlock(
+  // level.holderLookup(BuiltInRegistries.BLOCK.key()),
+  // stateString,
+  // false);
+  // BlockState targetState = parsedResult.blockState();
+  //
+  // // 2. Set the block state in Server A's world
+  // // Flags: 2 = Send to clients, 16 = Prevent neighbor reactions if you want it
+  // // exact
+  // level.setBlock(pos, targetState, 2);
+  //
+  // // 3. If the block has NBT data (like a Chest, Furnace, or Sign), paste it in
+  // CompoundTag nbt = data.blockEntityTag();
+  // if (nbt != null) {
+  // BlockEntity blockEntity = level.getBlockEntity(pos);
+  // if (blockEntity != null) {
+  // // Update the block entity's internal coordinates to match the new position
+  // nbt.putInt("x", pos.getX());
+  // nbt.putInt("y", pos.getY());
+  // nbt.putInt("z", pos.getZ());
+  //
+  // // Load the metadata payload directly into the tile entity
+  // blockEntity.loadWithComponents(nbt, level.registryAccess());
+  // blockEntity.setChanged(); // Mark chunk dirty so it saves to disk
+  // }
+  // }
+  //
+  // } catch (Exception e) {
+  // LOGGER.error("CUBOIDCHECK: Failed to paste block at XYZ: {}, {}, {}",
+  // data.x(), data.y(), data.z());
+  // e.printStackTrace();
+  // }
+  // }
+  // }
 
   // private static void processReceivedCuboid(MinecraftServer server,
   // List<BlockData> blocks) {
