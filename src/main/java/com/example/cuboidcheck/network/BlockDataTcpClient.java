@@ -35,7 +35,14 @@ public class BlockDataTcpClient {
   private static final ExecutorService networkExecutor = Executors.newSingleThreadExecutor();
   public static final Logger LOGGER = LogUtils.getLogger();
 
+  // private static boolean isServerRunning = false;
+
   public static void connect(String ip, int port) {
+    if (socket != null && !socket.isClosed()) {
+      LOGGER.warn("CUBOIDCHECK: Socket connection requested, but TCP Server is already running on port " + port);
+      return;
+    }
+
     try {
       LOGGER.info("CUBOIDCHECK: loading SOCKET");
       socket = new Socket(ip, port);
@@ -43,10 +50,38 @@ public class BlockDataTcpClient {
       in = new DataInputStream(socket.getInputStream());
       LOGGER.info("CUBOIDCHECK: Successfully connected to Server B via TCP!");
     } catch (Exception e) {
-      LOGGER.warn("CUBOIDCHECK: Failed to establish TCP connection to Server B at {}:{}", ip, port);
+      // LOGGER.warn("CUBOIDCHECK: Failed to establish TCP connection to Server B at
+      // {}:{}", ip, port);
+      LOGGER.error("CUBOIDCHECK: Failed to establish TCP connection to Server B at {}:{}", ip, port);
       e.printStackTrace();
     }
   }
+  // public static synchronized void connect(String ip, int port) {
+  //
+  // if (!socket.isClosed() && socket.isBound()) {
+  // LOGGER.warn("CUBOIDCHECK: Socket connection requested, but TCP Server is
+  // already running on port " + port);
+  // return;
+  // }
+  //
+  // try {
+  // LOGGER.info("CUBOIDCHECK: loading SOCKET");
+  // socket = new Socket(ip, port);
+  // out = new DataOutputStream(socket.getOutputStream());
+  // in = new DataInputStream(socket.getInputStream());
+  // LOGGER.info("CUBOIDCHECK: Successfully connected to Server B via TCP!");
+  // } catch (Exception e) {
+  // LOGGER.warn("CUBOIDCHECK: Failed to establish TCP connection to Server B at
+  // {}:{}", ip, port);
+  // e.printStackTrace();
+  // }
+  // // finally {
+  // //
+  // // synchronized (BlockDataTcpClient.class) {
+  // // isServerRunning = false;
+  // // }
+  // // }
+  // }
 
   /**
    * Requests data for all blocks within the specified cuboid boundaries.
