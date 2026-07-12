@@ -2,10 +2,12 @@ package com.example.cuboidcheck;
 
 import org.slf4j.Logger;
 
+import com.example.cuboidcheck.commands.CuboidCheckPreviewCommand;
 import com.example.cuboidcheck.commands.CuboidCheckRestoreCommand;
 import com.example.cuboidcheck.config.CuboidCheckConfig;
 import com.example.cuboidcheck.network.BlockDataTcpClient;
 import com.example.cuboidcheck.network.BlockDataTcpServer;
+import com.example.cuboidcheck.utl.ClientRenderHandler;
 import com.mojang.logging.LogUtils;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -27,6 +29,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
@@ -36,6 +39,8 @@ import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.fml.loading.FMLLoader; // <-- Use this import
+import net.neoforged.api.distmarker.Dist;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
 @Mod(CuboidCheck.MODID)
@@ -104,6 +109,13 @@ public class CuboidCheck {
     // Do not add this line if there are no @SubscribeEvent-annotated functions in
     // this class, like onServerStarting() below.
     NeoForge.EVENT_BUS.register(this);
+
+    // make sure it is client-sided or else
+    if (FMLLoader.getDist() == Dist.CLIENT) {
+      // net.neoforged.neoforge.common.NeoForge.EVENT_BUS.register(ClientRenderHandler.class);
+      // renders cuboid for CuboidCheckPreviewCommand
+      NeoForge.EVENT_BUS.register(ClientRenderHandler.class);
+    }
 
     // Register the item to a creative tab
     modEventBus.addListener(this::addCreative);
@@ -176,6 +188,7 @@ public class CuboidCheck {
   @SubscribeEvent
   public void onCommandsRegister(RegisterCommandsEvent event) {
     CuboidCheckRestoreCommand.register(event.getDispatcher());
+    CuboidCheckPreviewCommand.register(event.getDispatcher());
   }
 
 }

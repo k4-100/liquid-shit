@@ -35,8 +35,6 @@ public class BlockDataTcpClient {
   private static final ExecutorService networkExecutor = Executors.newSingleThreadExecutor();
   public static final Logger LOGGER = LogUtils.getLogger();
 
-  // private static boolean isServerRunning = false;
-
   public static void connect(String ip, int port) {
     if (socket != null && !socket.isClosed()) {
       LOGGER.warn("CUBOIDCHECK: Socket connection requested, but TCP Server is already running on port " + port);
@@ -50,38 +48,10 @@ public class BlockDataTcpClient {
       in = new DataInputStream(socket.getInputStream());
       LOGGER.info("CUBOIDCHECK: Successfully connected to Server B via TCP!");
     } catch (Exception e) {
-      // LOGGER.warn("CUBOIDCHECK: Failed to establish TCP connection to Server B at
-      // {}:{}", ip, port);
       LOGGER.error("CUBOIDCHECK: Failed to establish TCP connection to Server B at {}:{}", ip, port);
       e.printStackTrace();
     }
   }
-  // public static synchronized void connect(String ip, int port) {
-  //
-  // if (!socket.isClosed() && socket.isBound()) {
-  // LOGGER.warn("CUBOIDCHECK: Socket connection requested, but TCP Server is
-  // already running on port " + port);
-  // return;
-  // }
-  //
-  // try {
-  // LOGGER.info("CUBOIDCHECK: loading SOCKET");
-  // socket = new Socket(ip, port);
-  // out = new DataOutputStream(socket.getOutputStream());
-  // in = new DataInputStream(socket.getInputStream());
-  // LOGGER.info("CUBOIDCHECK: Successfully connected to Server B via TCP!");
-  // } catch (Exception e) {
-  // LOGGER.warn("CUBOIDCHECK: Failed to establish TCP connection to Server B at
-  // {}:{}", ip, port);
-  // e.printStackTrace();
-  // }
-  // // finally {
-  // //
-  // // synchronized (BlockDataTcpClient.class) {
-  // // isServerRunning = false;
-  // // }
-  // // }
-  // }
 
   /**
    * Requests data for all blocks within the specified cuboid boundaries.
@@ -180,68 +150,6 @@ public class BlockDataTcpClient {
       }
     }
   }
-
-  // private static void processReceivedCuboid(MinecraftServer server,
-  // List<BlockData> blocks) {
-  // LOGGER.info("CUBOIDCHECK: Pasting batch cuboid containing {} blocks into
-  // Server A.", blocks.size());
-  //
-  // ServerLevel level = server.overworld();
-  //
-  // for (BlockData data : blocks) {
-  // BlockPos pos = new BlockPos(data.x(), data.y(), data.z());
-  //
-  // try {
-  // // 1. Convert the JSON string back into a valid Minecraft BlockState
-  // String stateString = data.blockState().getAsString();
-  //
-  // // This parses vanilla state strings like "minecraft:chest[facing=north]"
-  // safely
-  // BlockStateParser.BlockResult parsedResult = BlockStateParser.parseForBlock(
-  // level.holderLookup(BuiltInRegistries.BLOCK.key()),
-  // stateString,
-  // false);
-  // BlockState targetState = parsedResult.blockState();
-  //
-  // // 2. Set the block state in Server A's world
-  // // Flags: 2 = Send to clients, 16 = Prevent neighbor reactions if you want it
-  // // exact
-  // level.setBlock(pos, targetState, 2);
-  //
-  // // 3. If the block has NBT data (like a Chest, Furnace, or Sign), paste it in
-  // CompoundTag nbt = data.blockEntityTag();
-  // if (nbt != null) {
-  // BlockEntity blockEntity = level.getBlockEntity(pos);
-  // if (blockEntity != null) {
-  // // Update the block entity's internal coordinates to match the new position
-  // nbt.putInt("x", pos.getX());
-  // nbt.putInt("y", pos.getY());
-  // nbt.putInt("z", pos.getZ());
-  //
-  // // Load the metadata payload directly into the tile entity
-  // blockEntity.loadWithComponents(nbt, level.registryAccess());
-  // blockEntity.setChanged(); // Mark chunk dirty so it saves to disk
-  // }
-  // }
-  //
-  // } catch (Exception e) {
-  // LOGGER.error("CUBOIDCHECK: Failed to paste block at XYZ: {}, {}, {}",
-  // data.x(), data.y(), data.z());
-  // e.printStackTrace();
-  // }
-  // }
-  // }
-
-  // private static void processReceivedCuboid(MinecraftServer server,
-  // List<BlockData> blocks) {
-  // LOGGER.info("CUBOIDCHECK: Processing batch cuboid containing {} blocks.",
-  // blocks.size());
-  // for (BlockData data : blocks) {
-  // LOGGER.info("CUBOIDCHECK: Processing: {}", data.toJson().toString());
-  // // Your custom logic per block goes here
-  // // e.g., level.setBlock(...) or tracking layout differentials
-  // }
-  // }
 
   public static void close() {
     try {
