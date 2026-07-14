@@ -41,6 +41,9 @@ import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.fml.loading.FMLLoader; // <-- Use this import
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import com.example.cuboidcheck.network.ClientboundSyncSelectionPayload;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
 @Mod(CuboidCheck.MODID)
@@ -110,12 +113,12 @@ public class CuboidCheck {
     // this class, like onServerStarting() below.
     NeoForge.EVENT_BUS.register(this);
 
-    // make sure it is client-sided or else
-    if (FMLLoader.getDist() == Dist.CLIENT) {
-      // net.neoforged.neoforge.common.NeoForge.EVENT_BUS.register(ClientRenderHandler.class);
-      // renders cuboid for CuboidCheckPreviewCommand
-      NeoForge.EVENT_BUS.register(ClientRenderHandler.class);
-    }
+    // if (FMLLoader.getDist() == Dist.CLIENT) {
+    // //
+    // net.neoforged.neoforge.common.NeoForge.EVENT_BUS.register(ClientRenderHandler.class);
+    // // renders cuboid for CuboidCheckPreviewCommand
+    // NeoForge.EVENT_BUS.register(ClientRenderHandler.class);
+    // }
 
     // Register the item to a creative tab
     modEventBus.addListener(this::addCreative);
@@ -129,7 +132,21 @@ public class CuboidCheck {
     // Register the server lifecycle events
     NeoForge.EVENT_BUS.addListener(this::onServerStarting);
     NeoForge.EVENT_BUS.addListener(this::onServerStopping);
+    // Inside your public CuboidCheck(IEventBus modEventBus, ModContainer
+    // modContainer) constructor:
 
+    // NeoForge.EVENT_BUS.addListener(this::registerNetworkPayloads);
+    modEventBus.addListener(this::registerNetworkPayloads);
+  }
+
+  private void registerNetworkPayloads(final RegisterPayloadHandlersEvent event) {
+    final PayloadRegistrar registrar = event.registrar(MODID).versioned("1.0.0");
+
+    // Register our packet to go to the client side
+    registrar.playToClient(
+        ClientboundSyncSelectionPayload.TYPE,
+        ClientboundSyncSelectionPayload.CODEC,
+        ClientboundSyncSelectionPayload::handleClient);
   }
 
   private void commonSetup(FMLCommonSetupEvent event) {

@@ -1,57 +1,57 @@
-[12Jul2026 21:07:52.496] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgeserverdev, --gameDir, ., --fml.fmlVersion, 4.0.42, --fml.mcVersion, 1.21.1, --fml.neoForgeVersion, 21.1.233, --fml.neoFormVersion, 20240808.144430, --port, 25566, --nogui]
-[12Jul2026 21:07:52.498] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: JVM identified as Arch Linux OpenJDK 64-Bit Server VM 21.0.11+10
-[12Jul2026 21:07:52.499] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 11.0.5+main.901c6ea8 starting: java version 21.0.11 by Arch Linux; OS Linux arch amd64 version 7.1.3-2-cachyos
-[12Jul2026 21:07:52.572] [main/INFO] [net.neoforged.fml.loading.ImmediateWindowHandler/]: ImmediateWindowProvider not loading because launch target is forgeserverdev
-[12Jul2026 21:07:52.609] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=union:/home/ka/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.15.2+mixin.0.8.7/2af2f021d8e02a0220dc27a7a72b4666d66d44ca/sponge-mixin-0.15.2+mixin.0.8.7.jar%2394!/ Service=ModLauncher Env=SERVER
-[12Jul2026 21:07:52.794] [main/INFO] [net.neoforged.fml.loading.moddiscovery.locators.JarInJarDependencyLocator/]: Found 2 dependencies adding them to mods collection
-[12Jul2026 21:07:52.795] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/]: 
+[14Jul2026 13:59:46.604] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgeserverdev, --gameDir, ., --fml.fmlVersion, 4.0.42, --fml.mcVersion, 1.21.1, --fml.neoForgeVersion, 21.1.233, --fml.neoFormVersion, 20240808.144430, --port, 25566, --nogui]
+[14Jul2026 13:59:46.605] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: JVM identified as Arch Linux OpenJDK 64-Bit Server VM 21.0.11+10
+[14Jul2026 13:59:46.606] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 11.0.5+main.901c6ea8 starting: java version 21.0.11 by Arch Linux; OS Linux arch amd64 version 6.18.38-2-lts
+[14Jul2026 13:59:46.699] [main/INFO] [net.neoforged.fml.loading.ImmediateWindowHandler/]: ImmediateWindowProvider not loading because launch target is forgeserverdev
+[14Jul2026 13:59:46.761] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=union:/home/k40/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.15.2+mixin.0.8.7/2af2f021d8e02a0220dc27a7a72b4666d66d44ca/sponge-mixin-0.15.2+mixin.0.8.7.jar%2394!/ Service=ModLauncher Env=SERVER
+[14Jul2026 13:59:46.956] [main/INFO] [net.neoforged.fml.loading.moddiscovery.locators.JarInJarDependencyLocator/]: Found 2 dependencies adding them to mods collection
+[14Jul2026 13:59:46.957] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/]: 
      Mod List:
 		Name Version (Mod Id)
 
 		CuboidCheck 1.0.0 (cuboidcheck)
 		Minecraft 1.21.1 (minecraft)
 		NeoForge 21.1.233 (neoforge)
-[12Jul2026 21:07:53.141] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeserverdev' with arguments [--gameDir, ., --port, 25566, --nogui]
-[12Jul2026 21:07:53.521] [main/INFO] [MixinExtras|Service/]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.3).
-[12Jul2026 21:07:56.848] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
-[12Jul2026 21:07:56.850] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
-[12Jul2026 21:07:56.852] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
-[12Jul2026 21:07:56.853] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
-[12Jul2026 21:07:56.861] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
-[12Jul2026 21:07:56.907] [modloading-worker-0/INFO] [net.neoforged.neoforge.common.NeoForgeMod/NEOFORGE-MOD]: NeoForge mod loading, version 21.1.233, for MC 1.21.1
-[12Jul2026 21:07:57.063] [modloading-worker-0/INFO] [com.example.cuboidcheck.CuboidCheck/]: HELLO FROM COMMON SETUP
-[12Jul2026 21:07:57.063] [modloading-worker-0/INFO] [com.example.cuboidcheck.CuboidCheck/]: DIRT BLOCK >> minecraft:dirt
-[12Jul2026 21:07:57.063] [modloading-worker-0/INFO] [com.example.cuboidcheck.CuboidCheck/]: The magic number is... 42
-[12Jul2026 21:07:57.063] [modloading-worker-0/INFO] [com.example.cuboidcheck.CuboidCheck/]: ITEM >> minecraft:iron_ingot
-[12Jul2026 21:07:57.119] [main/INFO] [com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService/]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
-[12Jul2026 21:07:57.176] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/projects/SIDE/liquid-shit/build/moddev/artifacts/neoforge-21.1.233.jar%23125!/assets/.mcassetsroot' uses unexpected schema
-[12Jul2026 21:07:57.176] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/projects/SIDE/liquid-shit/build/moddev/artifacts/neoforge-21.1.233.jar%23125!/data/.mcassetsroot' uses unexpected schema
-[12Jul2026 21:07:57.775] [main/INFO] [net.minecraft.world.item.crafting.RecipeManager/]: Loaded 1290 recipes
-[12Jul2026 21:07:57.906] [main/INFO] [net.minecraft.advancements.AdvancementTree/]: Loaded 1399 advancements
-[12Jul2026 21:07:58.265] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Starting minecraft server version 1.21.1
-[12Jul2026 21:07:58.265] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Loading properties
-[12Jul2026 21:07:58.265] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Default game type: SURVIVAL
-[12Jul2026 21:07:58.265] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Generating keypair
-[12Jul2026 21:07:58.309] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Starting Minecraft server on *:25566
-[12Jul2026 21:07:58.339] [Server thread/INFO] [net.minecraft.server.network.ServerConnectionListener/]: Using epoll channel type
-[12Jul2026 21:07:58.361] [Server thread/WARN] [net.minecraft.server.dedicated.DedicatedServer/]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
-[12Jul2026 21:07:58.361] [Server thread/WARN] [net.minecraft.server.dedicated.DedicatedServer/]: The server will make no attempt to authenticate usernames. Beware.
-[12Jul2026 21:07:58.361] [Server thread/WARN] [net.minecraft.server.dedicated.DedicatedServer/]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
-[12Jul2026 21:07:58.361] [Server thread/WARN] [net.minecraft.server.dedicated.DedicatedServer/]: To change this, set "online-mode" to "true" in the server.properties file.
-[12Jul2026 21:07:58.386] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Preparing level "world"
-[12Jul2026 21:07:59.165] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Preparing start region for dimension minecraft:overworld
-[12Jul2026 21:07:59.396] [worldgen/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
-[12Jul2026 21:07:59.499] [Server thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Time elapsed: 334 ms
-[12Jul2026 21:07:59.499] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Done (1.132s)! For help, type "help"
-[12Jul2026 21:07:59.531] [Server thread/INFO] [net.neoforged.neoforge.gametest.GameTestHooks/]: Enabled Gametest Namespaces: []
-[12Jul2026 21:07:59.535] [Server thread/INFO] [net.neoforged.neoforge.server.permission.PermissionAPI/]: Successfully initialized permission handler neoforge:default_handler
-[12Jul2026 21:07:59.535] [Server thread/INFO] [com.example.cuboidcheck.CuboidCheck/]: HELLO from server starting
-[12Jul2026 21:07:59.535] [Server thread/INFO] [com.example.cuboidcheck.CuboidCheck/]: SERVER_TYPE: SERVER_B
-[12Jul2026 21:07:59.535] [Server thread/INFO] [com.example.cuboidcheck.CuboidCheck/]: HELLO from server B starting, port: 8082
-[12Jul2026 21:07:59.536] [Server thread/INFO] [com.example.cuboidcheck.CuboidCheck/]: HELLO from server B started, port: 8082
-[12Jul2026 21:07:59.537] [Server thread/INFO] [com.example.cuboidcheck.CuboidCheck/]: HELLO from server starting
-[12Jul2026 21:07:59.537] [Server thread/INFO] [com.example.cuboidcheck.CuboidCheck/]: SERVER_TYPE: SERVER_B
-[12Jul2026 21:07:59.537] [Server thread/INFO] [com.example.cuboidcheck.CuboidCheck/]: HELLO from server B starting, port: 8082
-[12Jul2026 21:07:59.537] [BlockData-TCP-Server/INFO] [com.example.cuboidcheck.network.BlockDataTcpServer/]: CUBOIDCHECK: TCP BlockData Server listening on port 8082
-[12Jul2026 21:07:59.537] [Server thread/WARN] [com.example.cuboidcheck.network.BlockDataTcpServer/]: CUBOIDCHECK: Server start requested, but TCP Server is already running on port 8082
-[12Jul2026 21:07:59.537] [Server thread/INFO] [com.example.cuboidcheck.CuboidCheck/]: HELLO from server B started, port: 8082
+[14Jul2026 13:59:47.422] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeserverdev' with arguments [--gameDir, ., --port, 25566, --nogui]
+[14Jul2026 13:59:47.826] [main/INFO] [MixinExtras|Service/]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.3).
+[14Jul2026 13:59:51.616] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[14Jul2026 13:59:51.617] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
+[14Jul2026 13:59:51.619] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[14Jul2026 13:59:51.619] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[14Jul2026 13:59:51.620] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[14Jul2026 13:59:51.659] [modloading-worker-0/INFO] [net.neoforged.neoforge.common.NeoForgeMod/NEOFORGE-MOD]: NeoForge mod loading, version 21.1.233, for MC 1.21.1
+[14Jul2026 13:59:51.808] [modloading-worker-0/INFO] [com.example.cuboidcheck.CuboidCheck/]: HELLO FROM COMMON SETUP
+[14Jul2026 13:59:51.808] [modloading-worker-0/INFO] [com.example.cuboidcheck.CuboidCheck/]: DIRT BLOCK >> minecraft:dirt
+[14Jul2026 13:59:51.809] [modloading-worker-0/INFO] [com.example.cuboidcheck.CuboidCheck/]: The magic number is... 42
+[14Jul2026 13:59:51.809] [modloading-worker-0/INFO] [com.example.cuboidcheck.CuboidCheck/]: ITEM >> minecraft:iron_ingot
+[14Jul2026 13:59:51.909] [main/INFO] [com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService/]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
+[14Jul2026 13:59:51.964] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/projects/SIDE/liquid-shit/build/moddev/artifacts/neoforge-21.1.233.jar%23125!/assets/.mcassetsroot' uses unexpected schema
+[14Jul2026 13:59:51.964] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/projects/SIDE/liquid-shit/build/moddev/artifacts/neoforge-21.1.233.jar%23125!/data/.mcassetsroot' uses unexpected schema
+[14Jul2026 13:59:52.658] [main/INFO] [net.minecraft.world.item.crafting.RecipeManager/]: Loaded 1290 recipes
+[14Jul2026 13:59:52.893] [main/INFO] [net.minecraft.advancements.AdvancementTree/]: Loaded 1399 advancements
+[14Jul2026 13:59:53.257] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Starting minecraft server version 1.21.1
+[14Jul2026 13:59:53.257] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Loading properties
+[14Jul2026 13:59:53.257] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Default game type: SURVIVAL
+[14Jul2026 13:59:53.257] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Generating keypair
+[14Jul2026 13:59:53.313] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Starting Minecraft server on *:25566
+[14Jul2026 13:59:53.350] [Server thread/INFO] [net.minecraft.server.network.ServerConnectionListener/]: Using epoll channel type
+[14Jul2026 13:59:53.372] [Server thread/WARN] [net.minecraft.server.dedicated.DedicatedServer/]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
+[14Jul2026 13:59:53.372] [Server thread/WARN] [net.minecraft.server.dedicated.DedicatedServer/]: The server will make no attempt to authenticate usernames. Beware.
+[14Jul2026 13:59:53.372] [Server thread/WARN] [net.minecraft.server.dedicated.DedicatedServer/]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
+[14Jul2026 13:59:53.372] [Server thread/WARN] [net.minecraft.server.dedicated.DedicatedServer/]: To change this, set "online-mode" to "true" in the server.properties file.
+[14Jul2026 13:59:53.404] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Preparing level "world"
+[14Jul2026 13:59:54.680] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Preparing start region for dimension minecraft:overworld
+[14Jul2026 13:59:54.925] [worldgen/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
+[14Jul2026 13:59:55.081] [Server thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Time elapsed: 400 ms
+[14Jul2026 13:59:55.081] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Done (1.700s)! For help, type "help"
+[14Jul2026 13:59:55.110] [Server thread/INFO] [net.neoforged.neoforge.gametest.GameTestHooks/]: Enabled Gametest Namespaces: []
+[14Jul2026 13:59:55.116] [Server thread/INFO] [net.neoforged.neoforge.server.permission.PermissionAPI/]: Successfully initialized permission handler neoforge:default_handler
+[14Jul2026 13:59:55.116] [Server thread/INFO] [com.example.cuboidcheck.CuboidCheck/]: HELLO from server starting
+[14Jul2026 13:59:55.116] [Server thread/INFO] [com.example.cuboidcheck.CuboidCheck/]: SERVER_TYPE: SERVER_B
+[14Jul2026 13:59:55.116] [Server thread/INFO] [com.example.cuboidcheck.CuboidCheck/]: HELLO from server B starting, port: 8082
+[14Jul2026 13:59:55.118] [Server thread/INFO] [com.example.cuboidcheck.CuboidCheck/]: HELLO from server B started, port: 8082
+[14Jul2026 13:59:55.118] [Server thread/INFO] [com.example.cuboidcheck.CuboidCheck/]: HELLO from server starting
+[14Jul2026 13:59:55.118] [Server thread/INFO] [com.example.cuboidcheck.CuboidCheck/]: SERVER_TYPE: SERVER_B
+[14Jul2026 13:59:55.118] [Server thread/INFO] [com.example.cuboidcheck.CuboidCheck/]: HELLO from server B starting, port: 8082
+[14Jul2026 13:59:55.118] [BlockData-TCP-Server/INFO] [com.example.cuboidcheck.network.BlockDataTcpServer/]: CUBOIDCHECK: TCP BlockData Server listening on port 8082
+[14Jul2026 13:59:55.118] [Server thread/WARN] [com.example.cuboidcheck.network.BlockDataTcpServer/]: CUBOIDCHECK: Server start requested, but TCP Server is already running on port 8082
+[14Jul2026 13:59:55.118] [Server thread/INFO] [com.example.cuboidcheck.CuboidCheck/]: HELLO from server B started, port: 8082

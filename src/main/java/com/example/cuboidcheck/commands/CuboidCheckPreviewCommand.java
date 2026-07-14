@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import com.example.cuboidcheck.network.BlockDataTcpClient;
 import com.example.cuboidcheck.utl.BlockData;
+import com.example.cuboidcheck.utl.CuboidVisualizer;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -23,8 +24,12 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.server.level.ServerPlayer;
+import net.neoforged.neoforge.network.PacketDistributor;
+import com.example.cuboidcheck.network.ClientboundSyncSelectionPayload;
 
 public class CuboidCheckPreviewCommand {
+  // private CuboidVisualizer cuboidVisualizer;
 
   public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
 
@@ -65,9 +70,26 @@ public class CuboidCheckPreviewCommand {
                           () -> Component.literal("Previewing Area..."),
                           false);
 
+                      // com.example.cuboidcheck.utl.CuboidVisualizer.setSelection(posStart.getX(),
+                      // posStart.getY(),
+                      // posStart.getZ(), posEnd.getX(), posEnd.getY(), posEnd.getZ());
                       // Sets a temporary 3x3x3 box preview around 0, 90, 0
-                      com.example.cuboidcheck.utl.CuboidVisualizer.setSelection(posStart.getX(), posStart.getY(),
-                          posStart.getZ(), posEnd.getX(), posEnd.getY(), posEnd.getZ());
+
+                      // CuboidVisualizer.setSelection(posStart.getX(), posStart.getY(),
+                      // posStart.getZ(), posEnd.getX(), posEnd.getY(), posEnd.getZ());
+
+                      // Inside your command execution logic:
+                      ServerPlayer player = context.getSource().getPlayerOrException();
+
+                      // Send packet directly to this player's client rendering engine instance
+                      PacketDistributor.sendToPlayer(player,
+                          new ClientboundSyncSelectionPayload(
+                              posStart.getX(), posStart.getY(),
+                              posStart.getZ(), posEnd.getX(), posEnd.getY(), posEnd.getZ()));
+
+                      context.getSource().sendSuccess(
+                          () -> Component.literal("Setting Area..."),
+                          false);
 
                       return 1;
                     }))));
